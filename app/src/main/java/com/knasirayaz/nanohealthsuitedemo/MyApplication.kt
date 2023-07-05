@@ -1,4 +1,6 @@
 package com.knasirayaz.nanohealthsuitedemo
 
-class MyApplication {
+import android.app.Application
+
+class MyApplication : Application() {
 }
