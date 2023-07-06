@@ -37,8 +37,8 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun fieldsAreValid(hashMap: HashMap<String, String>): CredentialValidator.ValidationState {
-        val usernameValidation = credentialValidator.isValidUserName(hashMap["username"]!!)
-        val passwordValidation = credentialValidator.isPasswordValid(hashMap["password"]!!)
+        val usernameValidation = credentialValidator.isValidUserName(hashMap["username"].toString())
+        val passwordValidation = credentialValidator.isPasswordValid(hashMap["password"].toString())
 
         if (!usernameValidation.isValid) {
             return usernameValidation

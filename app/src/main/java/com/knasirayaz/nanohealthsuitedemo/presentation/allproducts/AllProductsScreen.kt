@@ -21,43 +21,51 @@ import com.knasirayaz.nanohealthsuitedemo.presentation.login.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AllProductsScreen : BaseFragment<FragmentAllProductsBinding>(R.layout.fragment_all_products){
+class AllProductsScreen : BaseFragment<FragmentAllProductsBinding>(R.layout.fragment_all_products) {
 
     private val viewModel: AllProductsViewModel by viewModels()
-    private var mProductsAdapter : ProductsAdapter? = null
-    private var mProducts : ArrayList<ProductsResponseItem> = ArrayList()
+    private var mProductsAdapter: ProductsAdapter? = null
+    private var mProducts: ArrayList<ProductsResponseItem> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getProductsObserver().observe(viewLifecycleOwner){ resultStates ->
-            when(resultStates){
-                is ResultStates.Failed -> {
-                    showToast(requireView(), resultStates.error, SnackBarTypes.ERROR)
-                }
-                is ResultStates.ValidationFailed ->{
-                    showToast(requireView(), getString(resultStates.error), SnackBarTypes.ERROR)
-                }
-                is ResultStates.Success ->{
-                    mProducts.clear()
-                    mProducts.addAll(resultStates.data)
-                    mProductsAdapter?.notifyDataSetChanged()
-                }
-                else -> {}
-            }
-        }.also {
-            viewModel.getAllProducts()
-        }
-
+        apiCall()
         setAdapter()
     }
 
+    private fun apiCall() {
+        if (mProducts.isEmpty())
+            viewModel.getProductsObserver().observe(viewLifecycleOwner) { resultStates ->
+                when (resultStates) {
+                    is ResultStates.Failed -> {
+                        showToast(requireView(), resultStates.error, SnackBarTypes.ERROR)
+                    }
+
+                    is ResultStates.ValidationFailed -> {
+                        showToast(requireView(), getString(resultStates.error), SnackBarTypes.ERROR)
+                    }
+
+                    is ResultStates.Success -> {
+                        mProducts.clear()
+                        mProducts.addAll(resultStates.data)
+                        mProductsAdapter?.notifyDataSetChanged()
+                    }
+
+                    else -> {}
+                }
+            }.also {
+                viewModel.getAllProducts()
+            }
+    }
+
     private fun setAdapter() {
-        mProducts.clear()
-        mProductsAdapter = ProductsAdapter(mProducts){
-            findNavController().navigate(R.id.action_navigation_home_to_productsDetailScreen, bundleOf("id" to it))
+        mProductsAdapter = ProductsAdapter(mProducts) {
+            findNavController().navigate(
+                R.id.action_navigation_home_to_productsDetailScreen,
+                bundleOf("id" to it)
+            )
         }
         viewBinding.rvProducts.adapter = mProductsAdapter
     }
-
 }

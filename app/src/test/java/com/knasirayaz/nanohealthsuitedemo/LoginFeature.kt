@@ -4,7 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.knasirayaz.nanohealthsuitedemo.data.repository.LoginRepositoryImpl
 import com.knasirayaz.nanohealthsuitedemo.data.source.remote.Webservice
+import com.knasirayaz.nanohealthsuitedemo.domain.common.CredentialValidator
 import com.knasirayaz.nanohealthsuitedemo.domain.common.ResultStates
+import com.knasirayaz.nanohealthsuitedemo.domain.common.SessionManager
 import com.knasirayaz.nanohealthsuitedemo.domain.model.LoginResponse
 import com.knasirayaz.nanohealthsuitedemo.domain.repository.LoginRepository
 import com.knasirayaz.nanohealthsuitedemo.domain.usecase.Login
@@ -58,7 +60,7 @@ class LoginFeature {
     fun `observer should work fine`() = runTest{
         mRepository  = Mockito.mock(LoginRepository::class.java)
         mLoginUseCase = Login(mRepository)
-        mViewModel = LoginViewModel(mLoginUseCase)
+        mViewModel = LoginViewModel(mLoginUseCase, CredentialValidator)
         mViewModel.getLoginObserver().observeForever(mObserver)
         mViewModel.doLogin(hashMapOf())
         given(mRepository.doLogin(hashMapOf())).willReturn(ResultStates.Success(loginResult))
@@ -74,10 +76,12 @@ class LoginFeature {
 
     @Test
     fun `login is working fine`() = runTest{
-        given(webService.login(hashMapOf())).willReturn(loginResult)
-        mRepository = LoginRepositoryImpl(webService)
+        val sessionManager  = Mockito.mock(SessionManager::class.java)
+
+        given(webService.login(hashMapOf())).willReturn(LoginResponse("test"))
+        mRepository = LoginRepositoryImpl(webService, sessionManager)
         mLoginUseCase = Login(mRepository)
-        mViewModel = LoginViewModel(mLoginUseCase)
+        mViewModel = LoginViewModel(mLoginUseCase, CredentialValidator)
         mViewModel.getLoginObserver().observeForever(mObserver)
         mViewModel.doLogin(hashMapOf())
         advanceUntilIdle()
@@ -86,7 +90,7 @@ class LoginFeature {
             inOrder(mObserver){
                 verify(mObserver).onChanged(ResultStates.Loading(true))
                 advanceUntilIdle()
-                verify(mObserver).onChanged(ResultStates.Success(loginResult))
+                verify(mObserver).onChanged(ResultStates.Success("test"))
                 verify(mObserver).onChanged(ResultStates.Loading(false))
             }
         }
@@ -94,10 +98,12 @@ class LoginFeature {
 
     @Test
     fun `failed to login`() = runTest{
+        val sessionManager  = Mockito.mock(SessionManager::class.java)
+
         given(webService.login(hashMapOf())).willReturn(LoginResponse(null))
-        mRepository = LoginRepositoryImpl(webService)
+        mRepository = LoginRepositoryImpl(webService, sessionManager)
         mLoginUseCase = Login(mRepository)
-        mViewModel = LoginViewModel(mLoginUseCase)
+        mViewModel = LoginViewModel(mLoginUseCase, CredentialValidator)
         mViewModel.getLoginObserver().observeForever(mObserver)
         mViewModel.doLogin(hashMapOf())
         advanceUntilIdle()
