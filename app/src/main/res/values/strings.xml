@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">NanoHealthSuite</string>
+    <string name="enter_email">Please enter valid email address</string>
+    <string name="invalid_email">\"Please enter valid email address\"</string>
+    <string name="enter_password">Password Field is empty</string>
+    <string name="invalid_password">Please enter valid password</string>
+    <string name="enter_username">Please enter username</string>
+    <string name="invalid_username">Please enter valid username</string>
+    <string name="unknown_error">Unknown Error</string>
 </resources>

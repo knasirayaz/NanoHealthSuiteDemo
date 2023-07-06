@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.knasirayaz.nanohealthsuitedemo.presentation.allproducts.AllProductsScreen"
+        android:label="AllProductsScreen" >
+        <action
+            android:id="@+id/action_navigation_home_to_productsDetailScreen"
+            app:destination="@id/productsDetailScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/productsDetailScreen"
+        android:name="com.knasirayaz.nanohealthsuitedemo.presentation.productdetails.ProductsDetailScreen"
+        android:label="ProductsDetailScreen" />
+</navigation>
