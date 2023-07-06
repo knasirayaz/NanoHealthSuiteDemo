@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.knasirayaz.nanohealthsuitedemo.R
 import com.knasirayaz.nanohealthsuitedemo.databinding.FragmentProductDetailBinding
 import com.knasirayaz.nanohealthsuitedemo.domain.common.BindingAdapters.loadImage
@@ -50,6 +51,13 @@ class ProductsDetailScreen : BaseFragment<FragmentProductDetailBinding>(R.layout
                 }
                 is ResultStates.Success ->{
                     setData(resultStates.data)
+                }
+                is ResultStates.Loading -> {
+                    if(resultStates.isLoading){
+                        viewBinding.progressBar.visibility = View.VISIBLE
+                    }else{
+                        viewBinding.progressBar.visibility = View.GONE
+                    }
                 }
                 else -> {}
             }

@@ -7,4 +7,13 @@
     <string name="enter_username">Please enter username</string>
     <string name="invalid_username">Please enter valid username</string>
     <string name="unknown_error">Unknown Error</string>
+    <string name="continue_">Continue</string>
+    <string name="need_help">NEED HELP?</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="log_in">Log In</string>
+    <string name="all_products">All Products</string>
+    <string name="detail">Detail</string>
+    <string name="order_now">Order Now</string>
+    <string name="description">Description</string>
 </resources>

@@ -52,6 +52,13 @@ class AllProductsScreen : BaseFragment<FragmentAllProductsBinding>(R.layout.frag
                         mProductsAdapter?.notifyDataSetChanged()
                     }
 
+                    is ResultStates.Loading -> {
+                        if(resultStates.isLoading){
+                            viewBinding.progressBar.visibility = View.VISIBLE
+                        }else{
+                            viewBinding.progressBar.visibility = View.GONE
+                        }
+                    }
                     else -> {}
                 }
             }.also {

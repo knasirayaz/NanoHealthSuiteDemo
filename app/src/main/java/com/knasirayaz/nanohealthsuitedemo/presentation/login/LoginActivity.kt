@@ -1,6 +1,7 @@
 package com.knasirayaz.nanohealthsuitedemo.presentation.login
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -37,6 +38,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         }
 
         viewBinding.btnLogin.setOnClickListener {
+            viewBinding.btnLogin.isEnabled = false
+
             viewModel.doLogin(
                 hashMapOf(
                     "username" to viewBinding.edtEmailAddress.text.toString(),
@@ -45,6 +48,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         }
 
         viewModel.getLoginObserver().observe(this, Observer { resultStates ->
+            if(resultStates !is ResultStates.Loading){
+                viewBinding.btnLogin.isEnabled = true
+            }
+
             when(resultStates){
                 is ResultStates.Failed -> {
                     showToast(viewBinding.rootView, resultStates.error, SnackBarTypes.ERROR)
@@ -55,6 +62,13 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
                 is ResultStates.Success ->{
                     launchActivity<HomeActivity>()
                     finish()
+                }
+                is ResultStates.Loading -> {
+                    if(resultStates.isLoading){
+                        viewBinding.progressBar.visibility = View.VISIBLE
+                    }else{
+                        viewBinding.progressBar.visibility = View.GONE
+                    }
                 }
                 else -> {}
             }
